@@ -1,10 +1,13 @@
 <div class="container">
     <div class="jumbotron">
         Hello, it's news
-        <button class="btn btn-primary" id="scrape-btn">Scrape Headlines</button>
+        <a href="scrape" class="btn btn-primary" id="scrape-btn">Scrape Headlines</a href="scrape">
     </div>
     <div class="card">
         {{#if data}}
+            {{#each data}}
+                <a href="{{link}}">{{headline}}</a>
+            {{/each}}
         {{else}}
             No new articles
         {{/if}}

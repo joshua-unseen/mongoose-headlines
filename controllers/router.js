@@ -17,16 +17,44 @@ const router = express.Router();
 router.get("/", (req, res) => {
     res.render("index");
 });
-router.get("/scrape", (req, res) => {});
-router.get("/saved", (req, res) => {});
-router.get("/saved/:id", (req, res) => {});
+router.get("/scrape", (req, res) => {
+    const scrapeArray = [];
+
+    axios.get("https://www.theregister.co.uk/").then((response) => {
+
+        const $ = cheerio.load(response.data);
+
+        $("article").each((i, element) => {
+
+            const section = $(element).find(".section_name").text().trim();
+
+            if (section.length === 0) {
+                return;
+            }
+
+            const title = $(element).find("h4").text().trim();
+            const link = `https://www.theregister.co.uk${$(element).find("a").attr("href")}`;
+            const article = {
+                headline: title,
+                section: section,
+                link: link
+            };
+
+            scrapeArray.push(article);
+        });
+        const hbrs = { data: scrapeArray };
+        res.render("index", hbrs);
+    });
+});
+router.get("/saved", (req, res) => { });
+router.get("/saved/:id", (req, res) => { });
 // Posts
-router.post("/save", (req, res) => {});
-router.post("/comment", (req, res) => {});
+router.post("/save", (req, res) => { });
+router.post("/comment", (req, res) => { });
 // Puts
 
 // Deletes
-router.delete("/article/:id", (req, res) => {});
-router.delete("/comment/:id", (req, res) => {});
+router.delete("/article/:id", (req, res) => { });
+router.delete("/comment/:id", (req, res) => { });
 
 module.exports = router;
