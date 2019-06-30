@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="jumbotron">
+        Hello, it's news
+        <button class="btn btn-primary" id="scrape-btn">Scrape Headlines</button>
+    </div>
+    <div class="card">
+        {{#if data}}
+        {{else}}
+            No new articles
+        {{/if}}
+    </div>
+</div>
