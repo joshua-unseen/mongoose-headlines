@@ -16,3 +16,5 @@ router.post("/comment", (req, res) => {});
 // Deletes
 router.delete("/article/:id", (req, res) => {});
 router.delete("/comment/:id", (req, res) => {});
+
+module.exports = router;
