@@ -1,29 +1,56 @@
 // Node modules
-let express = require("express");
-let mongoose = require("mongoose");
-
-var axios = require("axios");
-var cheerio = require("cheerio");
+const mongoose = require("mongoose");
+const express = require("express");
+const exphbs = require("express-handlebars");
+const routes = require("./controllers/router");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
 // ORM
-var db = require("./models");
+const db = require("./models");
 
-let MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-let PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+const PORT = process.env.PORT || 3000;
 
-let app = express();
+// Initialize app
+const app = express();
 
-// Parse request body as JSON
+// Parse JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// Make public a static folder
+// public folder
 app.use(express.static("public"));
 
+app.use(routes);
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 mongoose.connect(MONGODB_URI);
 
+//// DB
+// Table: article
 // Headline
 // Summary
 // URL
 // extra content?
-// comments
+// comments (hasMany)
+//
+// Table: comments
+// comment
+// article (belongsTo)
+//
+// Table: users (maybe)
+// username
+// comments (hasMany)
+
+//// Routes
+// get (scrape)
+// get (show db contents)
+// get (show article comments)
+// post (add comment)
+// delete (comment)
+
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
