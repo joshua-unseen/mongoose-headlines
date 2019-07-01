@@ -6,7 +6,13 @@ const ArticleSchema = new Schema({
         type: String,
         required: true
     },
+    image: {
+        type: String
+    },
     summary: {
+        type: String
+    },
+    section: {
         type: String
     },
     link: {

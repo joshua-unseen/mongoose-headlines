@@ -1,3 +1,5 @@
+/* eslint-disable sort-keys */
+/* eslint-disable max-statements */
 const axios = require("axios");
 const cheerio = require("cheerio");
 const express = require("express");
@@ -26,30 +28,83 @@ router.get("/scrape", (req, res) => {
 
         $("article").each((i, element) => {
 
-            const section = $(element).find(".section_name").text().trim();
+            const stubLink = $(element).find("a").attr("href");
 
-            if (section.length === 0) {
+            if (stubLink.match(/^http/u)) {
                 return;
             }
+            let summary = null;
 
+            if ($(element).find(".standfirst").length) {
+                summary = $(element).find(".standfirst").html().trim();
+            }
+            const link = `https://www.theregister.co.uk${stubLink}`;
+            const section = $(element).find(".section_name").text().trim();
+            const $image = $(element).find("img");
+            const imageURL = $image.data("src") || $image.attr("src");
             const title = $(element).find("h4").text().trim();
-            const link = `https://www.theregister.co.uk${$(element).find("a").attr("href")}`;
             const article = {
+                image: imageURL,
                 headline: title,
+                summary: summary,
                 section: section,
                 link: link
             };
 
+            article.stringObj = JSON.stringify(article);
+
             scrapeArray.push(article);
         });
         const hbrs = { data: scrapeArray };
+
         res.render("index", hbrs);
+    }).catch((error) => {console.log(error)});
+});
+
+router.get("/saved", (req, res) => {
+    db.Article.find((err, articles) => {
+        let hbrs;
+        if (err) {
+            hbrs = {data: err};
+            res.send(err);
+        }
+        else {
+            hbrs = {data: articles};
+            res.render("index", hbrs);
+        }
     });
 });
-router.get("/saved", (req, res) => { });
+
 router.get("/saved/:id", (req, res) => { });
+
 // Posts
-router.post("/save", (req, res) => { });
+router.post("/api/save", (req, res) => {
+    const article = req.body;
+
+    db.Article.findOne({headline: article.headline}, (err, doc) => {
+        if (err) {
+            res.send(err);
+        }
+        else if (doc) {
+            res.send("article already saved");
+        }
+        else {
+            db.Article.create(article, (err, doc) => {
+                if (err) {
+                    res.send(err);
+                }
+                else {
+                    res.send(doc);
+                }
+            });
+        }
+    });
+    
+    // res.status(200).end()
+    //or
+    // res.status(500).end()
+});
+
 router.post("/comment", (req, res) => { });
 // Puts
 
