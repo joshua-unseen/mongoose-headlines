@@ -9,12 +9,12 @@
             <table class="table table-hover">
                 <thead>
                     <th colspan="3">
-                        Saved Articles
+                        Today's Headlines
                     </th>
                 </thead>
                 <tbody>
                     {{#each data}}
-                    <tr id="{{@index}}" data-obj="{{stringObj}}">
+                    <tr id="{{_id}}" data-obj="{{stringObj}}">
                         <td>
                             {{#if image}}
                             <img src="{{image}}" class="img-thumbnail" alt="article thumb">
@@ -28,7 +28,8 @@
                             <p>{{{summary}}}</p>
                         </td>
                         <td class="align-middle">
-                            <button class="btn btn-primary save-btn" data-id="{{@index}}">Save</button>
+                            <button class="btn btn-primary w-100 mb-2 notes-btn" data-id="{{_id}}">Comments</button>
+                            <button class="btn btn-danger w-100 delete-btn" data-id="{{_id}}">Delete</button>
                         </td>
                     </tr>
                     {{/each}}

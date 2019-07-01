@@ -15,10 +15,12 @@ const router = express.Router();
 // post (add comment)
 // delete (comment)
 
-// Gets
+// GET
+// Root
 router.get("/", (req, res) => {
     res.render("index");
 });
+// Scrape
 router.get("/scrape", (req, res) => {
     const scrapeArray = [];
 
@@ -60,7 +62,7 @@ router.get("/scrape", (req, res) => {
         res.render("index", hbrs);
     }).catch((error) => {console.log(error)});
 });
-
+// Saved
 router.get("/saved", (req, res) => {
     db.Article.find((err, articles) => {
         let hbrs;
@@ -70,14 +72,14 @@ router.get("/saved", (req, res) => {
         }
         else {
             hbrs = {data: articles};
-            res.render("index", hbrs);
+            res.render("saved", hbrs);
         }
     });
 });
-
+// Single
 router.get("/saved/:id", (req, res) => { });
 
-// Posts
+// POST
 router.post("/api/save", (req, res) => {
     const article = req.body;
 
