@@ -60,30 +60,35 @@ router.get("/scrape", (req, res) => {
         const hbrs = { data: scrapeArray };
 
         res.render("index", hbrs);
-    }).catch((error) => {console.log(error)});
+    }).catch((error) => { console.log(error) });
 });
 // Saved
 router.get("/saved", (req, res) => {
     db.Article.find((err, articles) => {
-        let hbrs;
+        let hbrs = {};
+
         if (err) {
-            hbrs = {data: err};
-            res.send(err);
+            hbrs = { data: err };
+            res.render("error", hbrs);
         }
         else {
-            hbrs = {data: articles};
+            hbrs = { data: articles };
             res.render("saved", hbrs);
         }
     });
 });
 // Single
-router.get("/saved/:id", (req, res) => { });
+router.get("/saved/:id", (req, res) => {
+    db.Article.findOne({ _id: req.params.id }).populate("comment").then((article) => {
+        res.json(article);
+    });
+});
 
 // POST
 router.post("/api/save", (req, res) => {
     const article = req.body;
 
-    db.Article.findOne({headline: article.headline}, (err, doc) => {
+    db.Article.findOne({ headline: article.headline }, (err, doc) => {
         if (err) {
             res.send(err);
         }
@@ -101,17 +106,20 @@ router.post("/api/save", (req, res) => {
             });
         }
     });
-    
+
     // res.status(200).end()
     //or
     // res.status(500).end()
 });
 
-router.post("/comment", (req, res) => { });
+router.post("/saved/:id", (req, res) => {
+    console.log(req.body);
+    db.Comment.create().then();
+});
 // Puts
 
 // Deletes
-router.delete("/article/:id", (req, res) => { });
+router.delete("/saved/:id", (req, res) => { });
 router.delete("/comment/:id", (req, res) => { });
 
 module.exports = router;

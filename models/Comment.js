@@ -5,10 +5,6 @@ const CommentSchema = new Schema({
     comment: {
         type: String,
         required: true
-    },
-    title: {
-        type: String,
-        required: true
     }
 });
 
