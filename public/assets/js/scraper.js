@@ -17,11 +17,19 @@ $(() => {
         $.get(`/saved/${id}`).then((response) => {
             console.log(response);
             $(".modal-title").text(response.headline);
-            if(response.comment) {
+            if(response.comments) {
                 $("#comment-div").empty();
-                $("#comment-div").append(`<p>${response.comment}</p>`);
+                $("#comment-div").append(`<p>${response.comments}</p>`);
             }
             $("#comments").modal();
+            $("#comment-form").data("id", id);
         });
+    });
+
+    $("#comment-form").on("submit", (event) => {
+        event.preventDefault();
+        console.log(event);
+        const id = $("#comment").data("id");
+        // $.post(`saved/${id}`)
     });
 });

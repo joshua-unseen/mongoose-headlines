@@ -79,7 +79,7 @@ router.get("/saved", (req, res) => {
 });
 // Single
 router.get("/saved/:id", (req, res) => {
-    db.Article.findOne({ _id: req.params.id }).populate("comment").then((article) => {
+    db.Article.findOne({ _id: req.params.id }).populate("comments").then((article) => {
         res.json(article);
     });
 });
@@ -114,7 +114,7 @@ router.post("/api/save", (req, res) => {
 
 router.post("/saved/:id", (req, res) => {
     console.log(req.body);
-    db.Comment.create().then();
+    db.Comment.create(req.body).then();
 });
 // Puts
 
