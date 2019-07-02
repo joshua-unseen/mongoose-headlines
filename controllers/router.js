@@ -114,7 +114,13 @@ router.post("/api/save", (req, res) => {
 
 router.post("/saved/:id", (req, res) => {
     console.log(req.body);
-    db.Comment.create(req.body).then();
+    db.Comment.create(req.body).then((doc) => {
+        db.Article.findOne({_id: req.params.id}).then((article) => {
+            article.comments.push(doc);
+            article.save();
+            res.json(doc)
+        });
+    });
 });
 // Puts
 
