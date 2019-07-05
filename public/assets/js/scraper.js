@@ -42,12 +42,13 @@ $(() => {
     // delete article
     $(".article-delete").on("click", (event) => {
         const id = $(event.target).data("id");
-        
+
         $.ajax(`/saved/${id}`, {
             method: "DELETE"
         }).then((response) => {
             console.log(response);
-            location.reload();
+            $(`#${response._id}`).remove();
+            // location.reload();
         });
     });
 

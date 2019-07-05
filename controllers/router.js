@@ -128,18 +128,21 @@ router.post("/saved/:id", (req, res) => {
 router.delete("/saved/:id", (req, res) => {
     db.Article.findOne({ _id: req.params.id }).then((article) => {
         if (article.comments.length) {
-            article.comments.forEach((element) => {
-                db.Comment.deleteOne({_id: element._id}).then((doc) => {
-                    console.log(doc);
-                });
+            // article.comments.forEach((element) => {
+            //     db.Comment.deleteOne({_id: element._id}).then((doc) => {
+            //         console.log(doc);
+            //     });
+            // });
+            db.Comment.deleteMany({_id: {$in: article.comments}}).then((qRes) => {
+                console.log(qRes);
             });
         }
         article.remove((err, doc) => {
             if (err) {
-                console.log(err);
+                res.send(err);
             }
             console.log(doc);
-            res.json(doc);
+            res.send(doc);
         });
     });
 });
