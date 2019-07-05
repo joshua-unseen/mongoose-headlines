@@ -123,6 +123,18 @@ router.post("/saved/:id", (req, res) => {
     });
 });
 // Puts
+router.put("/saved/:id", (req, res) => {
+    const cID = req.body.commentID
+    console.log(req.body);
+    db.Article.updateOne({_id: req.params.id}, {$pull: {comments: cID}}).
+        then((doc) => {
+            console.log(doc)
+        });
+    db.Comment.deleteOne({_id: cID}).then((qRes) => {
+        console.log(qRes);
+        res.send(qRes);
+    })
+});
 
 // Deletes
 router.delete("/saved/:id", (req, res) => {
@@ -146,6 +158,5 @@ router.delete("/saved/:id", (req, res) => {
         });
     });
 });
-router.delete("/comment/:id", (req, res) => { });
 
 module.exports = router;
