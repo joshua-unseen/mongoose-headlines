@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable sort-keys */
 /* eslint-disable max-statements */
 const axios = require("axios");
@@ -52,10 +53,27 @@ router.get("/scrape", (req, res) => {
                 section: section,
                 link: link
             };
+            // Articles appear mulitple times on the front page with different attributes.  Munge them together for our DB.
+            const articleExists = scrapeArray.find((elem, idx) => {
+                if (elem.headline === article.headline) {
+                    // bunch of logical short circuts to pull as much data into the final object as we can.
+                    scrapeArray[idx].image = scrapeArray[idx].image || article.image;
+                    scrapeArray[idx].summary = scrapeArray[idx].summary || article.summary;
+                    scrapeArray[idx].section = scrapeArray[idx].section || article.section;
+                    // the stringObj property is possibly outdated.  Delete it and recreate.
+                    Reflect.deleteProperty(scrapeArray[idx], "stringObj");
+                    scrapeArray[idx].stringObj = JSON.stringify(scrapeArray[idx]);
 
-            article.stringObj = JSON.stringify(article);
+                    return true;
+                }
 
-            scrapeArray.push(article);
+                return false;
+            });
+
+            if (!articleExists) {
+                article.stringObj = JSON.stringify(article);
+                scrapeArray.push(article);
+            }
         });
         const hbrs = { data: scrapeArray };
 
@@ -79,9 +97,10 @@ router.get("/saved", (req, res) => {
 });
 // Single
 router.get("/saved/:id", (req, res) => {
-    db.Article.findOne({ _id: req.params.id }).populate("comments").then((article) => {
-        res.json(article);
-    });
+    db.Article.findOne({ _id: req.params.id }).populate("comments")
+        .then((article) => {
+            res.send(article);
+        });
 });
 
 // POST
@@ -123,6 +142,7 @@ router.post("/saved/:id", (req, res) => {
     });
 });
 // Puts
+// remove comment id from article and delete comment
 router.put("/saved/:id", (req, res) => {
     const cID = req.body.commentID
     console.log(req.body);
@@ -137,6 +157,7 @@ router.put("/saved/:id", (req, res) => {
 });
 
 // Deletes
+// delete article and all associated comments
 router.delete("/saved/:id", (req, res) => {
     db.Article.findOne({ _id: req.params.id }).then((article) => {
         if (article.comments.length) {

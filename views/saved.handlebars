@@ -1,7 +1,8 @@
 <div class="container">
-    <div class="jumbotron">
-        Hello, it's news
-        <a href="scrape" class="btn btn-primary" id="scrape-btn">Scrape Headlines</a href="scrape">
+    <div class="jumbotron text-center">
+        <h1>The Register, scraped</h1>
+        <h5>Biting the hand that bites the hand that feeds IT</h5>
+        <h6>or something like that</h6>
     </div>
     <div class="card">
         <div class="card-body">
@@ -37,6 +38,7 @@
             </table>
             {{else}}
             No saved articles
+            <a href="scrape" class="btn btn-primary" id="scrape-btn">Scrape Headlines</a href="scrape">
             {{/if}}
         </div>
     </div>
@@ -56,7 +58,8 @@
                     <p>No comments</p>
                 </div>
                 <form id="comment-form">
-                    <textarea class="form-control mb-2" placeholder="Write a new comment" name="comment" id="" cols="30" rows="10" required></textarea>
+                    <textarea class="form-control mb-2" placeholder="Write a new comment" name="comment" id="" cols="30"
+                        rows="10" required></textarea>
                     <input type="submit" class="btn btn-primary" value="submit">
                     <input type="button" class="btn btn-secondary" data-dismiss="modal" value="cancel">
                 </form>
