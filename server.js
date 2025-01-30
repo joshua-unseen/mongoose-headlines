@@ -1,7 +1,7 @@
 // Node modules
 const mongoose = require("mongoose");
 const express = require("express");
-const exphbs = require("express-handlebars");
+const {engine} = require("express-handlebars");
 
 // ORM
 const routes = require("./controllers/router");
@@ -22,11 +22,11 @@ app.use(express.static("public"));
 // router
 app.use(routes);
 // view engine init
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.engine("handlebars", engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 //DB connect
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI);
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
