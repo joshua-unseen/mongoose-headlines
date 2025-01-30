@@ -106,7 +106,7 @@ router.get("/saved/:id", (req, res) => {
 // POST
 router.post("/api/save", (req, res) => {
     const article = req.body;
-
+// Mongoose no longer supports callbacks, will need to rework these.
     db.Article.findOne({ headline: article.headline }, (err, doc) => {
         if (err) {
             res.send(err);
